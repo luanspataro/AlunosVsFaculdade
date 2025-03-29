@@ -2,12 +2,14 @@ public class Aluno extends Agente {
     private int notas;
     private boolean aprovado;
     private int inteligencia;
+    private static int alunosAprovados;
 
     public Aluno(int x, int y, String emoji, int notas, boolean aprovado, int inteligencia) {
         super(x, y, emoji);
         this.notas = 0;
         this.aprovado = false;
         this.inteligencia = inteligencia;
+        this.alunosAprovados = 0;
     }
 
     public void setNotas(int notas) {
@@ -26,8 +28,9 @@ public class Aluno extends Agente {
 
     public void coletarNota() {
         notas++;
-        if (notas >= 6) {
+        if (notas >= 6 && !aprovado) {
             aprovado = true;
+            alunosAprovados++;
         }
     }
 
@@ -40,6 +43,10 @@ public class Aluno extends Agente {
 
     public boolean estaAprovado() {
         return aprovado;
+    }
+
+    public Integer getAlunosAprovados(){
+        return alunosAprovados;
     }
     // colocar no tabuleiro
 }
