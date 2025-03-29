@@ -3,16 +3,18 @@ public class Main {
 
         Agente aluno1 = new Agente(2, 3, Agentes.aluno);
         Agente aluno2 = new Agente(5, 6, Agentes.aluno);
-        Agente faculdade = new Agente(8, 7, Agentes.faculdade);
+        // Agente faculdade = new Agente(8, 7, Agentes.faculdade);
+        Professor professor = new Professor(8, 7, 10, 20);
+        Simulador simulador = new Simulador(professor);
 
         Tabuleiro.adicionaAgente(aluno1);
         Tabuleiro.adicionaAgente(aluno2);
-        Tabuleiro.adicionaAgente(faculdade);
+        Tabuleiro.adicionaAgente(professor);
 
         boolean colisao = false;
         while (!colisao) {
-            if (aluno1.x == faculdade.x && aluno1.y == faculdade.y || aluno2.x == faculdade.x && aluno2.y == faculdade.y) {
-                Tabuleiro.mostraTabuleiroExplodido(faculdade.x, faculdade.y);
+            if (aluno1.x == professor.x && aluno1.y == professor.y || aluno2.x == professor.x && aluno2.y == professor.y) {
+                Tabuleiro.mostraTabuleiroExplodido(professor.x, professor.y);
                 System.out.println("colisao");
                 colisao = true;
             } else {
@@ -20,7 +22,8 @@ public class Main {
                 Tabuleiro.aguardaRodada(250);
                 Agentes.andaAleatorio(aluno1);
                 Agentes.andaAleatorio(aluno2);
-                Agentes.andaAleatorio(faculdade);
+                Agentes.andaAleatorio(professor);
+                Simulador.mostrarQuantidadeAlunosReprovados();
             }
         }
 

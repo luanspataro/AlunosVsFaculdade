@@ -36,7 +36,7 @@ public class Aluno extends Agente {
             notas--;
         }
     }
-    // implementar a lógica do fim do semetre no tabuleiro
+    // implementar a lógica do fim do semestre no tabuleiro
 
     public boolean estaAprovado() {
         return aprovado;

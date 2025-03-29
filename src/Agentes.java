@@ -3,7 +3,8 @@ import java.util.Random;
 public class Agentes {
     static String aluno = "\uD83E\uDDD1";
     static String formado = "\uD83D\uDC68\u200D\uD83C\uDF93";
-    static String faculdade = "\uD83C\uDFEB";
+    // static String faculdade = "\uD83C\uDFEB";
+    static String professor = "\uD83C\uDFEB";
     static String explosao = "\uD83D\uDCA5";
 
     static Random gera = new Random();

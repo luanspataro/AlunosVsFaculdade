@@ -12,9 +12,10 @@ public class Professor extends Agente {
 
     public void eliminarAluno(Aluno aluno) {
         aluno.encontrarProfessor();
+        alunosEliminados++;
     }
 
-    public int getAlunosEliminados() {
+    public Integer getAlunosEliminados() {
         return alunosEliminados;
     }
 
