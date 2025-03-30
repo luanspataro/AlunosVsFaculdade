@@ -5,6 +5,7 @@ public class Agentes {
     static String formado = "\uD83D\uDC68\u200D\uD83C\uDF93";
     // static String faculdade = "\uD83C\uDFEB";
     static String professor = "\uD83C\uDFEB";
+    static String prova = "\uD83D\uDCDD";
     static String explosao = "\uD83D\uDCA5";
 
     static Random gera = new Random();

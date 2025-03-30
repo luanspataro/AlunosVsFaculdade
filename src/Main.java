@@ -16,6 +16,10 @@ public class Main {
         Tabuleiro.adicionaAgente(professor);
 
         boolean colisao = false;
+
+        long ultimaProva = System.currentTimeMillis();
+        long intervaloProva = 3000;
+
         while (!colisao) {
             if (aluno1.x == professor.x && aluno1.y == professor.y || aluno2.x == professor.x && aluno2.y == professor.y) {
                 Tabuleiro.mostraTabuleiroExplodido(professor.x, professor.y);
@@ -24,6 +28,12 @@ public class Main {
                 simulador.mostrarQuantidadeAlunosReprovados();
                 colisao = true;
             } else {
+
+                if (System.currentTimeMillis() - ultimaProva > intervaloProva) {
+                    Tabuleiro.apareceProva();
+                    ultimaProva = System.currentTimeMillis();
+                }
+
                 Tabuleiro.mostraTabuleiro();
                 Tabuleiro.aguardaRodada(250);
                 Agentes.andaAleatorio(aluno1);

@@ -20,20 +20,20 @@ public class Tabuleiro {
 
         posicionaAgentes();
 
-            for (int i = 0; i < mapa.length; i++) {
-                for (int j = 0; j < mapa.length; j++) {
-                    System.out.print(mapa[i][j] + " ");
-                }
-                System.out.println();
+        for (int i = 0; i < mapa.length; i++) {
+            for (int j = 0; j < mapa.length; j++) {
+                System.out.print(mapa[i][j] + " ");
             }
+            System.out.println();
         }
+    }
 
-        public static void mostraTabuleiroExplodido(int x, int y) {
-            agentes.removeIf(a -> a.x == x && a.y == y); // Remove os agentes da coordenada
-            Agente explosao = new Agente(x, y, Agentes.explosao);
-            Tabuleiro.adicionaAgente(explosao);
-            Tabuleiro.mostraTabuleiro();
-        }
+    public static void mostraTabuleiroExplodido(int x, int y) {
+        agentes.removeIf(a -> a.x == x && a.y == y); // Remove os agentes da coordenada
+        Agente explosao = new Agente(x, y, Agentes.explosao);
+        Tabuleiro.adicionaAgente(explosao);
+        Tabuleiro.mostraTabuleiro();
+    }
 
     public static void posicionaAgentes() {
         for (Agente agente : agentes) {
@@ -55,5 +55,12 @@ public class Tabuleiro {
 
     public static void posicionaAgente(int x, int y, String agente) {
         mapa[x][y] = agente;
+    }
+
+    public static void apareceProva(){
+        int x = (int) (Math.random() * Tabuleiro.mapa.length);
+        int y = (int) (Math.random() * Tabuleiro.mapa.length);
+        Prova prova = new Prova(x, y);
+        adicionaAgente(prova);
     }
 }
