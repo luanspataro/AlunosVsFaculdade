@@ -10,8 +10,12 @@ public class Professor extends Agente {
         this.forca = forca;
     }
 
+    public int getForca() {
+        return this.forca;
+    }
+
     public void eliminarAluno(Aluno aluno) {
-        aluno.encontrarProfessor();
+        aluno.encontrarProfessor(forca);
         alunosEliminados++;
     }
 

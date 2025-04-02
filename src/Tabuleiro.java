@@ -17,7 +17,6 @@ public class Tabuleiro {
     public static void mostraTabuleiro() {
         System.out.println("\n \n \n");
         iniciaTabuleiro();
-
         posicionaAgentes();
 
         for (int i = 0; i < mapa.length; i++) {

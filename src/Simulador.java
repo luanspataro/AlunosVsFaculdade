@@ -7,8 +7,8 @@ public class Simulador {
     private Set<Aluno> alunos;
 
     public Simulador() {
-       this.professores = new HashSet<>();
-       this.alunos = new HashSet<>();
+        this.professores = new HashSet<>();
+        this.alunos = new HashSet<>();
     }
 
     public void adicionarProfessor(Professor professor){
@@ -20,7 +20,7 @@ public class Simulador {
     public void adicionarAluno(Aluno aluno){
         if(aluno != null)
             alunos.add(aluno);
-        }
+    }
 
     public void mostrarQuantidadeAlunosReprovados(){
         int total = 0;
@@ -38,5 +38,11 @@ public class Simulador {
             }
         }
         System.out.println("Alunos aprovados: " + total);
+    }
+
+    public void mostrarNotasAlunos(){
+        for (Aluno aluno : alunos) {
+            System.out.println("Aluno na posição (" + aluno.x + "," + aluno.y + ") tem " + aluno.getNotas() + " pontos.");
+        }
     }
 }

@@ -1,46 +1,50 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
 
-        Agente aluno1 = new Agente(2, 3, Agentes.aluno);
-        Agente aluno2 = new Agente(5, 6, Agentes.aluno);
-        // Agente faculdade = new Agente(8, 7, Agentes.faculdade);
-        Professor professor = new Professor(8, 7, 10, 20);
-        Aluno aluno = new Aluno(10, 10, "2", 0, false, 10);
+        System.out.println("Qual o nível de inteligencia do aluno? (1 - basico ou 2 - inteligente) ");
+        int inteligenciaAluno = scan.nextInt();
+
+        Aluno aluno1 = new Aluno(2, 3, inteligenciaAluno);
+        Aluno aluno2 = new Aluno(5, 6, inteligenciaAluno);
+        Professor professor = new Professor(8, 7, 2, 1);
+
         Simulador simulador = new Simulador();
 
         simulador.adicionarProfessor(professor);
-        professor.eliminarAluno(aluno);
+        simulador.adicionarAluno(aluno1);
+        simulador.adicionarAluno(aluno2);
 
         Tabuleiro.adicionaAgente(aluno1);
         Tabuleiro.adicionaAgente(aluno2);
         Tabuleiro.adicionaAgente(professor);
 
-        boolean colisao = false;
 
         long ultimaProva = System.currentTimeMillis();
         long intervaloProva = 3000;
 
-        while (!colisao) {
-            if (aluno1.x == professor.x && aluno1.y == professor.y || aluno2.x == professor.x && aluno2.y == professor.y) {
-                Tabuleiro.mostraTabuleiroExplodido(professor.x, professor.y);
-                System.out.println("colisao");
-                simulador.mostrarQuantidadeAlunosAprovados();
-                simulador.mostrarQuantidadeAlunosReprovados();
-                colisao = true;
-            } else {
+        int contadorRodadas = 0;
+        int maxRodadas = 100;
 
-                if (System.currentTimeMillis() - ultimaProva > intervaloProva) {
-                    Tabuleiro.apareceProva();
-                    ultimaProva = System.currentTimeMillis();
-                }
-
-                Tabuleiro.mostraTabuleiro();
-                Tabuleiro.aguardaRodada(250);
-                Agentes.andaAleatorio(aluno1);
-                Agentes.andaAleatorio(aluno2);
-                Agentes.andaAleatorio(professor);
+        while (contadorRodadas < maxRodadas) {
+            if (System.currentTimeMillis() - ultimaProva > intervaloProva) {
+                Tabuleiro.apareceProva();
+                ultimaProva = System.currentTimeMillis();
             }
+
+            Tabuleiro.mostraTabuleiro();
+            Tabuleiro.aguardaRodada(200);
+            aluno1.mover();
+            aluno2.mover();
+            Agentes.andaAleatorio(professor);
+            contadorRodadas++;
         }
 
+        simulador.mostrarQuantidadeAlunosAprovados();
+        simulador.mostrarQuantidadeAlunosReprovados();
+        simulador.mostrarNotasAlunos();
+        scan.close();
     }
 }
