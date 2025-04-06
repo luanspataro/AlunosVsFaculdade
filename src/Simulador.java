@@ -22,12 +22,22 @@ public class Simulador {
             alunos.add(aluno);
     }
 
-    public void mostrarQuantidadeAlunosReprovados(){
-        int total = 0;
-        for (Professor prof : professores) {
-            total += prof.getAlunosEliminados();
+    public void mostrarQuantidadeAlunosReprovados() {
+        int totalProfessor = 0;
+        int totalNotaInsuficiente = 0;
+
+        for (Aluno aluno : alunos) {
+            if (aluno.estaReprovado() && "professor".equals(aluno.getMotivoReprovacao())) {
+                totalProfessor++;
+            } else if (!aluno.estaAprovado() && !aluno.estaReprovado()) {
+                aluno.setReprovado(true);
+                aluno.setMotivoReprovacao("nota_insuficiente");
+                totalNotaInsuficiente++;
+            }
         }
-        System.out.println("Alunos reprovados: " + total);
+
+        System.out.println("Alunos reprovados pelo professor: " + totalProfessor);
+        System.out.println("Alunos reprovados por não ter atingido a nota: " + totalNotaInsuficiente);
     }
 
     public void mostrarQuantidadeAlunosAprovados(){
@@ -40,9 +50,23 @@ public class Simulador {
         System.out.println("Alunos aprovados: " + total);
     }
 
-    public void mostrarNotasAlunos(){
+    public void mostrarRelatorioAlunos() {
         for (Aluno aluno : alunos) {
-            System.out.println("Aluno na posição (" + aluno.x + "," + aluno.y + ") tem " + aluno.getNotas() + " pontos.");
+            String status = "";
+
+            if (aluno.estaAprovado()) {
+                status = "✅ Aprovado";
+            } else if (aluno.estaReprovado()) {
+                if ("professor".equals(aluno.getMotivoReprovacao())) {
+                    status = "❌ Reprovado (encontrou o professor)";
+                } else if ("nota_insuficiente".equals(aluno.getMotivoReprovacao())) {
+                    status = "❌ Reprovado (nota insuficiente)";
+                }
+            }
+
+            System.out.println(aluno.getNome() + " na posição (" + aluno.x + "," + aluno.y + ") tem "
+                    + aluno.getNotas() + " pontos no total. Perdeu "
+                    + aluno.getNotasPerdidas() + " pontos com os professores. " + status);
         }
     }
 }

@@ -7,8 +7,8 @@ public class Main {
         System.out.println("Qual o nível de inteligencia do aluno? (1 - basico ou 2 - inteligente) ");
         int inteligenciaAluno = scan.nextInt();
 
-        Aluno aluno1 = new Aluno(2, 3, inteligenciaAluno);
-        Aluno aluno2 = new Aluno(5, 6, inteligenciaAluno);
+        Aluno aluno1 = new Aluno("Maria", 2, 3, inteligenciaAluno);
+        Aluno aluno2 = new Aluno("João", 5, 6, inteligenciaAluno);
         Professor professor = new Professor(8, 7, 2, 1);
 
         Simulador simulador = new Simulador();
@@ -23,7 +23,7 @@ public class Main {
 
 
         long ultimaProva = System.currentTimeMillis();
-        long intervaloProva = 3000;
+        long intervaloProva = 1000;
 
         int contadorRodadas = 0;
         int maxRodadas = 100;
@@ -34,17 +34,42 @@ public class Main {
                 ultimaProva = System.currentTimeMillis();
             }
 
+            if (!aluno1.estaAprovado() && !aluno1.estaReprovado()) {
+                aluno1.mover();
+
+                if (aluno1.x == professor.x && aluno1.y == professor.y) {
+                    aluno1.encontrarProfessor(professor.getForca());
+                }
+            }
+
+            if (!aluno2.estaAprovado() && !aluno2.estaReprovado()) {
+                aluno2.mover();
+
+                if (aluno2.x == professor.x && aluno2.y == professor.y) {
+                    aluno2.encontrarProfessor(professor.getForca());
+                }
+            }
+
+            Agentes.andaAleatorio(professor);
+
+            if (!aluno1.estaAprovado() && !aluno1.estaReprovado()
+                    && aluno1.x == professor.x && aluno1.y == professor.y) {
+                aluno1.encontrarProfessor(professor.getForca());
+            }
+
+            if (!aluno2.estaAprovado() && !aluno2.estaReprovado()
+                    && aluno2.x == professor.x && aluno2.y == professor.y) {
+                aluno2.encontrarProfessor(professor.getForca());
+            }
+
             Tabuleiro.mostraTabuleiro();
             Tabuleiro.aguardaRodada(200);
-            aluno1.mover();
-            aluno2.mover();
-            Agentes.andaAleatorio(professor);
             contadorRodadas++;
         }
 
         simulador.mostrarQuantidadeAlunosAprovados();
         simulador.mostrarQuantidadeAlunosReprovados();
-        simulador.mostrarNotasAlunos();
+        simulador.mostrarRelatorioAlunos();
         scan.close();
     }
 }
