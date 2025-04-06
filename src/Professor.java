@@ -1,4 +1,4 @@
-public class Professor extends Agente {
+public class Professor extends Movimentacao {
     private int alunosEliminados;
     private int velocidade;
     private int forca;

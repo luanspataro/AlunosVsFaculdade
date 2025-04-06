@@ -1,4 +1,4 @@
-public class Aluno extends Agente {
+public class Aluno extends Movimentacao {
     private int notas;
     private boolean aprovado;
     private boolean reprovado;
@@ -52,9 +52,9 @@ public class Aluno extends Agente {
     }
 
     public void mover() {
-        Agentes.andaAleatorio(this);
+        Agente.andaAleatorio(this);
         for (int i = 0; i < Tabuleiro.agentes.size(); i++) {
-            Agente agente = Tabuleiro.agentes.get(i);
+            Movimentacao agente = Tabuleiro.agentes.get(i);
 
             if (agente.x == this.x && agente.y == this.y) {
                 if (agente instanceof Prova) {

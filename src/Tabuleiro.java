@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Tabuleiro {
     static String [][] mapa = new String[9][9];
-    static List<Agente> agentes = new ArrayList<>();
+    static List<Movimentacao> agentes = new ArrayList<>();
 
     public static void iniciaTabuleiro() {
         for (int i = 0; i < mapa.length; i++) {
@@ -29,13 +29,13 @@ public class Tabuleiro {
 
     public static void mostraTabuleiroExplodido(int x, int y) {
         agentes.removeIf(a -> a.x == x && a.y == y); // Remove os agentes da coordenada
-        Agente explosao = new Agente(x, y, Agentes.explosao);
+        Movimentacao explosao = new Movimentacao(x, y, Agente.explosao);
         Tabuleiro.adicionaAgente(explosao);
         Tabuleiro.mostraTabuleiro();
     }
 
     public static void posicionaAgentes() {
-        for (Agente agente : agentes) {
+        for (Movimentacao agente : agentes) {
             mapa[agente.y][agente.x] = agente.emoji;
         }
     }
@@ -48,7 +48,7 @@ public class Tabuleiro {
         }
     }
 
-    public static void adicionaAgente(Agente agente) {
+    public static void adicionaAgente(Movimentacao agente) {
         agentes.add(agente);
     }
 
