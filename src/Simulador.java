@@ -16,12 +16,14 @@ public class Simulador {
 
     public void comecarSimulacao(int dificuldade) {
         long ultimaProva   = System.currentTimeMillis();
-        long intervaloProva = 1000;
+        long intervaloProva = 0;
 
         if (dificuldade == 1) {
-            Professor prof1 = new Professor(8, 7, 2, 1);
+            int [] posicaoProfessor = Tabuleiro.geraPosicaoAleatoria();
+            Professor prof1 = new Professor(posicaoProfessor[0], posicaoProfessor[1], 2, 1);
             adicionarProfessor(prof1);
             Tabuleiro.adicionaAgente(prof1);
+            intervaloProva = 1000;
         }
 
         while (this.contadorRodadas <= maxRodadas) {

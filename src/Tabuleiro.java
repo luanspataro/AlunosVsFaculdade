@@ -57,9 +57,16 @@ public class Tabuleiro {
     }
 
     public static void apareceProva(){
-        int x = (int) (Math.random() * Tabuleiro.mapa.length);
-        int y = (int) (Math.random() * Tabuleiro.mapa.length);
-        Prova prova = new Prova(x, y);
+        int [] posicao = geraPosicaoAleatoria();
+        Prova prova = new Prova(posicao[0], posicao[1]);
         adicionaAgente(prova);
+    }
+
+    public static int[] geraPosicaoAleatoria(){
+        int [] posicao = new int[2];
+        posicao[0] = (int) (Math.random() * mapa.length);
+        posicao[1] = (int) (Math.random() * mapa.length);
+
+        return posicao;
     }
 }

@@ -10,10 +10,11 @@ public class Main {
         System.out.println("1 - Fácil, 2 - Médio - 3 - Difícil:");
         int dificuldade = scan.nextInt();
 
-
-        Aluno aluno1 = new Aluno("Maria", 2, 3, inteligenciaAluno);
-        Aluno aluno2 = new Aluno("João", 5, 6, inteligenciaAluno);
-        Professor professor = new Professor(8, 7, 2, 1);
+        int [] posicaoALuno1 = Tabuleiro.geraPosicaoAleatoria();
+        Aluno aluno1 = new Aluno("Maria", posicaoALuno1[0], posicaoALuno1[1], inteligenciaAluno);
+        int [] posicaoALuno2 = Tabuleiro.geraPosicaoAleatoria();
+        Aluno aluno2 = new Aluno("João", posicaoALuno2[0], posicaoALuno2[1], inteligenciaAluno);
+        //Professor professor = new Professor(posicaoProfessor[0], posicaoProfessor[1], 2, 1);
 
         Simulador simulador = new Simulador();
 
