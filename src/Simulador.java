@@ -14,16 +14,19 @@ public class Simulador {
         this.alunos = new HashSet<>();
     }
 
-    public void comecarSimulacao(int dificuldade) {
-        long ultimaProva   = System.currentTimeMillis();
+    public void comecarSimulacao(int dificuldade, int velocidadeProfessor, int forcaProfessor) {
+        long ultimaProva = System.currentTimeMillis();
         long intervaloProva = 0;
 
-        if (dificuldade == 1) {
-            int [] posicaoProfessor = Tabuleiro.geraPosicaoAleatoria();
-            Professor prof1 = new Professor(posicaoProfessor[0], posicaoProfessor[1], 2, 1);
-            adicionarProfessor(prof1);
-            Tabuleiro.adicionaAgente(prof1);
+        if (dificuldade == 1) { // Fácil
             intervaloProva = 1000;
+            adicionarProfessores(1, velocidadeProfessor, forcaProfessor);
+        } else if (dificuldade == 2) { // Médio
+            intervaloProva = 1000;
+            adicionarProfessores(2, velocidadeProfessor, forcaProfessor);
+        } else if (dificuldade == 3) { // Difícil
+            intervaloProva = 1000;
+            adicionarProfessores(3, velocidadeProfessor, forcaProfessor);
         }
 
         while (this.contadorRodadas <= maxRodadas) {
@@ -47,8 +50,11 @@ public class Simulador {
                 }
             }
 
+            // Movimentar os professores de acordo com sua velocidade
             for (Professor prof : professores) {
-                Agente.andaAleatorio(prof);
+                for (int i = 0; i < prof.getVelocidade(); i++) {
+                    Agente.andaAleatorio(prof);
+                }
             }
             rodadaAtual();
         }
@@ -59,6 +65,7 @@ public class Simulador {
         mostrarQuantidadeAlunosReprovados();
         mostrarRelatorioAlunos();
     }
+
 
     private void avaliarAlunos() {
         for (Aluno aluno : alunos) {
@@ -123,6 +130,18 @@ public class Simulador {
         System.out.println("Alunos aprovados: " + total);
     }
 
+    private void adicionarProfessores(int quantidade, int velocidadeProfessor, int forcaProfessor) {
+        for (int i = 0; i < quantidade; i++) {
+            int[] posicaoProfessor = Tabuleiro.geraPosicaoAleatoria();
+            // Cria o professor utilizando a velocidade e a força passadas pelo usuário.
+            Professor professor = new Professor(posicaoProfessor[0], posicaoProfessor[1], velocidadeProfessor, forcaProfessor);
+            adicionarProfessor(professor);
+            Tabuleiro.adicionaAgente(professor);
+        }
+    }
+
+
+
     public void mostrarRelatorioAlunos() {
         for (Aluno aluno : alunos) {
             String status = "";
@@ -147,3 +166,5 @@ public class Simulador {
         this.maxRodadas = maxRodadas;
     }
 }
+
+

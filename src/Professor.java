@@ -19,8 +19,11 @@ public class Professor extends Movimentacao {
         alunosEliminados++;
     }
 
+    public int getVelocidade() {
+        return this.velocidade;
+    }
+
     public Integer getAlunosEliminados() {
         return alunosEliminados;
     }
-
 }
