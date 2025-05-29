@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulação</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 30px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h2 {
+            margin-top: 40px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        form {
+            margin-bottom: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: inline-block;
+        }
+
+        label {
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .btn-group {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .btn-group button {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            margin: 0 5px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-group button:hover {
+            background-color: #2980b9;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: center;
+            width: 35px;
+            height: 35px;
+            font-size: 20px;
+        }
+
+        #tabuleiro {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Configuração da Simulação</h2>
+<form id="simulacaoForm" method="post">
+    <label>
+        Inteligência:
+        <input type="number" name="inteligencia" value="1" min="1" max="10" required>
+    </label>
+
+    <input type="hidden" name="dificuldade" id="dificuldadeHidden">
+
+    <div class="btn-group">
+        <button type="button" onclick="enviarFormulario(1)">Fácil</button>
+        <button type="button" onclick="enviarFormulario(2)">Médio</button>
+        <button type="button" onclick="enviarFormulario(3)">Difícil</button>
+    </div>
+</form>
+
+<h2>Tabuleiro</h2>
+<div style="display: flex; gap: 40px;">
+    <div id="tabuleiro">Carregando...</div>
+    <div>
+        <h2>Resultado</h2>
+        <div id="resultadoTexto">Aguardando simulação...</div>
+    </div>
+</div>
+
+
+<script>
+    function atualizarTabuleiro() {
+        fetch('/mapa')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.createElement("table");
+                data.forEach(linha => {
+                    const tr = document.createElement("tr");
+                    linha.forEach(celula => {
+                        const td = document.createElement("td");
+                        td.textContent = celula || "";
+                        tr.appendChild(td);
+                    });
+                    table.appendChild(tr);
+                });
+                const tabuleiro = document.getElementById("tabuleiro");
+                tabuleiro.innerHTML = "";
+                tabuleiro.appendChild(table);
+            });
+            mostraResultado();
+    }
+
+    function mostraResultado() {
+    // Primeiro busca o resultado principal
+    fetch('/resultado')
+        .then(response => response.text())
+        .then(resultado1 => {
+            // Depois busca o segundo resultado (pós-simulação)
+            fetch('/posresultado')
+                .then(response => response.text())
+                .then(resultado2 => {
+                    const combinado = resultado1 + "<br><br>" + resultado2;
+                    document.getElementById("resultadoTexto").innerHTML = combinado;
+                })
+                .catch(error => {
+                    document.getElementById("resultadoTexto").innerHTML = resultado1 + "<br><br>Erro ao buscar pós-resultado.";
+                    console.error("Erro ao buscar pós-resultado:", error);
+                });
+        })
+        .catch(error => {
+            document.getElementById("resultadoTexto").textContent = "Erro ao buscar resultado.";
+            console.error("Erro ao buscar resultado:", error);
+        });
+}
+
+
+    function enviarFormulario(dificuldade) {
+        document.getElementById('dificuldadeHidden').value = dificuldade;
+        document.getElementById('simulacaoForm').action = '/iniciar';
+        document.getElementById('simulacaoForm').submit();
+    }
+
+    setInterval(atualizarTabuleiro, 400);
+    atualizarTabuleiro();
+
+
+</script>
+
+</body>
+</html>
