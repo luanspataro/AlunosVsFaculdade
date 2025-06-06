@@ -6,24 +6,25 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 30px;
+            padding: 10px;
             background-color: #f4f4f9;
             color: #333;
         }
 
         h2 {
-            margin-top: 40px;
+            margin-top: 10px;
             margin-bottom: 15px;
             color: #2c3e50;
         }
 
         form {
-            margin-bottom: 30px;
             background-color: #fff;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             display: inline-block;
+            min-width: 250px;
+            margin-bottom: 0;
         }
 
         label {
@@ -61,7 +62,7 @@
 
         table {
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 0;
             background-color: white;
             border-radius: 10px;
             overflow: hidden;
@@ -78,37 +79,103 @@
         }
 
         #tabuleiro {
+            margin-top: 0;
+        }
+
+        .bloco {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .atributos {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabuleiro {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .dificuldade {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .resultado {
+            width: 100%;
             margin-top: 20px;
+        }
+
+        .configuracaoSimulacao {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .titulo {
+            margin-top: 0;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
-<h2>Configuração da Simulação</h2>
-<form id="simulacaoForm" method="post">
-    <label>
-        Inteligência:
-        <input type="number" name="inteligencia" value="1" min="1" max="10" required>
-    </label>
+<div class="bloco">
+    <div class="atributos">
+        <h2 class="configuracaoSimulacao">Configuração da Simulação</h2>
+        <form id="simulacaoForm" method="post">
+            <label>
+                Inteligência:
+                <input type="number" name="inteligencia" value="1" min="1" max="10" required>
+            </label>
+            <br><br>
+            <label>
+                Força:
+                <input type="number" name="forca" value="1" min="1" max="10" required>
+            </label>
+            <br><br>
+            <label>
+                Velocidade:
+                <input type="number" name="velocidade" id="velocidadeHidden" value="400" min="1" max="5000" required>
+            </label>
 
-    <input type="hidden" name="dificuldade" id="dificuldadeHidden">
+            <br><br>
 
-    <div class="btn-group">
-        <button type="button" onclick="enviarFormulario(1)">Fácil</button>
-        <button type="button" onclick="enviarFormulario(2)">Médio</button>
-        <button type="button" onclick="enviarFormulario(3)">Difícil</button>
+            <div class="bloco" style="margin-top: 20px;">
+                <div class="atributos">
+                    <h2 style="margin-top: 0; margin-bottom: 15px;">Iniciar Simulação</h2>
+                    <input type="hidden" name="dificuldade" id="dificuldadeHidden">
+                    <div class="dificuldade">
+
+                        <label style="margin-right: 10px;">Dificuldade:</label>
+                        <div class="btn-group">
+                            <button type="button" onclick="enviarFormulario(1)">Fácil</button>
+                            <button type="button" onclick="enviarFormulario(2)">Médio</button>
+                            <button type="button" onclick="enviarFormulario(3)">Difícil</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </form>
     </div>
-</form>
 
-<h2>Tabuleiro</h2>
-<div style="display: flex; gap: 40px;">
-    <div id="tabuleiro">Carregando...</div>
-    <div>
-        <h2>Resultado</h2>
-        <div id="resultadoTexto">Aguardando simulação...</div>
+    <div class="tabuleiro">
+        <h2 class="titulo">Tabuleiro</h2>
+        <div id="tabuleiro">Carregando...</div>
+
+        <div class="resultado">
+            <h2 class="titulo">Resultado</h2>
+            <div id="resultadoTexto">Aguardando simulação...</div>
+        </div>
+
     </div>
 </div>
-
 
 <script>
     function atualizarTabuleiro() {
@@ -130,14 +197,17 @@
                 tabuleiro.appendChild(table);
             });
             mostraResultado();
+
+            const velocidade = parseInt(document.querySelector('input[name="velocidade"]').value) || 400;
+            setTimeout(atualizarTabuleiro, 50);
     }
 
+    atualizarTabuleiro();
+
     function mostraResultado() {
-    // Primeiro busca o resultado principal
     fetch('/resultado')
         .then(response => response.text())
         .then(resultado1 => {
-            // Depois busca o segundo resultado (pós-simulação)
             fetch('/posresultado')
                 .then(response => response.text())
                 .then(resultado2 => {
@@ -155,16 +225,12 @@
         });
 }
 
-
     function enviarFormulario(dificuldade) {
         document.getElementById('dificuldadeHidden').value = dificuldade;
+        document.getElementById('velocidadeHidden').value = document.querySelector('input[name="velocidade"]').value;
         document.getElementById('simulacaoForm').action = '/iniciar';
         document.getElementById('simulacaoForm').submit();
     }
-
-    setInterval(atualizarTabuleiro, 400);
-    atualizarTabuleiro();
-
 
 </script>
 

@@ -19,8 +19,8 @@ public class SimuladorController {
     }
 
     @PostMapping("/iniciar")
-    public String iniciarSimulacao(@RequestParam int inteligencia, @RequestParam int dificuldade) {
-        simuladorService.iniciarSimulacao(inteligencia, dificuldade);
+    public String iniciarSimulacao(@RequestParam int inteligencia, @RequestParam int dificuldade, @RequestParam int velocidade) {
+        simuladorService.iniciarSimulacao(inteligencia, dificuldade, velocidade);
         return "redirect:/";
     }
 

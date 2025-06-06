@@ -11,14 +11,19 @@ public class Simulador {
     private int quantidadeTotalDeRodadas = 0;
     private int maxRodadas = 100;
     private Set<Professor> professores;
-    private static Set<Aluno> alunos;
+    private Set<Aluno> alunos;
+    private volatile boolean interrompido = false;
 
     public Simulador() {
         this.professores = new HashSet<>();
         this.alunos = new HashSet<>();
     }
 
-    public void comecarSimulacao(int dificuldade) {
+    public void interromper() {
+        this.interrompido = true;
+    }
+
+    public void comecarSimulacao(int dificuldade, int velocidade) {
         long ultimaProva   = System.currentTimeMillis();
         long intervaloProva = 0;
 
@@ -30,14 +35,14 @@ public class Simulador {
             intervaloProva = 1000;
         }
 
-        while (this.contadorRodadas <= maxRodadas) {
+        while (this.contadorRodadas <= maxRodadas && !interrompido) {
             if (System.currentTimeMillis() - ultimaProva > intervaloProva) {
                 Tabuleiro.apareceProva();
                 ultimaProva = System.currentTimeMillis();
             }
 
             Tabuleiro.mostraTabuleiro();
-            Tabuleiro.aguardaRodada(400);
+            Tabuleiro.aguardaRodada(velocidade);
 
             for (Aluno aluno : alunos) {
                 if (!aluno.estaAprovado() && !aluno.estaReprovado()) {
@@ -99,7 +104,11 @@ public class Simulador {
         }
     }
 
-    public static String mostrarQuantidadeAlunosReprovados() {
+    public String mostrarQuantidadeAlunosReprovados() {
+        if (alunos == null) {
+            return "Escolha a dificuldade para começar.";
+        }
+
         int totalProfessor = 0;
         int totalNotaInsuficiente = 0;
 
@@ -126,7 +135,13 @@ public class Simulador {
         System.out.println("Alunos aprovados: " + total);
     }
 
-    public static List<String> mostrarRelatorioAlunos() {
+    public List<String> mostrarRelatorioAlunos() {
+        if (alunos == null) {
+            List<String> resultado = new ArrayList<>();
+            resultado.add("A simulação ainda não foi iniciada.");
+            return resultado;
+        }
+
         List<String> resultado = new ArrayList<>();
         for (Aluno aluno : alunos) {
             String status = "";

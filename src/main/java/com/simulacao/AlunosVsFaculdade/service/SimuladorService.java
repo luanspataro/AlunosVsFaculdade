@@ -8,9 +8,18 @@ import java.util.List;
 @Service
 public class SimuladorService {
 
+    private Thread simulacaoThread;
     private Simulador simulador;
 
-    public void iniciarSimulacao(int inteligencia, int dificuldade) {
+    public synchronized void iniciarSimulacao(int inteligencia, int dificuldade, int velocidade) {
+        if (simulacaoThread != null && simulacaoThread.isAlive()) {
+            simulador.interromper();
+            try {
+                simulacaoThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
         Tabuleiro.agentes.clear();
         Tabuleiro.iniciaTabuleiro();
 
@@ -24,7 +33,8 @@ public class SimuladorService {
         Tabuleiro.adicionaAgente(aluno1);
         Tabuleiro.adicionaAgente(aluno2);
 
-        new Thread(() -> simulador.comecarSimulacao(dificuldade)).start();
+        simulacaoThread = new Thread(() -> simulador.comecarSimulacao(dificuldade, velocidade));
+        simulacaoThread.start();
     }
 
     public String[][] getMapaAtual() {
@@ -32,10 +42,16 @@ public class SimuladorService {
     }
 
     public List<String> getResultado() {
-        return Simulador.mostrarRelatorioAlunos();
+        if (simulador == null) {
+            return List.of("A simulação ainda não foi iniciada.");
+        }
+        return simulador.mostrarRelatorioAlunos();
     }
 
     public String getPosResultado() {
-        return Simulador.mostrarQuantidadeAlunosReprovados();
+        if (simulador == null) {
+            return "A simulação ainda não foi iniciada.";
+        }
+        return simulador.mostrarQuantidadeAlunosReprovados();
     }
 }
