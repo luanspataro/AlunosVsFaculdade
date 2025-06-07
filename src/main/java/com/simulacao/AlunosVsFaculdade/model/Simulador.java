@@ -32,7 +32,7 @@ public class Simulador {
             Professor prof1 = new Professor(posicaoProfessor[0], posicaoProfessor[1], 2, 1);
             adicionarProfessor(prof1);
             Tabuleiro.adicionaAgente(prof1);
-            intervaloProva = 1000;
+            intervaloProva = velocidade * 2L + velocidade / 2; // 2.5x da velocidade, equivalente a 1000ms por prova na velocidade padrão
         }
 
         while (this.contadorRodadas <= maxRodadas && !interrompido) {

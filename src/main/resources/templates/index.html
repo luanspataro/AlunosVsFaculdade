@@ -140,8 +140,11 @@
             <br><br>
             <label>
                 Velocidade:
-                <input type="number" name="velocidade" id="velocidadeHidden" value="400" min="1" max="5000" required>
+                <input type="range" id="velocidadeSlider" min="100" max="500" step="100" required
+                       oninput="document.getElementById('velocidadeValor').textContent = this.value">
+                <span id="velocidadeValor"></span>
             </label>
+            <input type="hidden" name="velocidade" id="velocidadeHidden">
 
             <br><br>
 
@@ -198,8 +201,8 @@
             });
             mostraResultado();
 
-            const velocidade = parseInt(document.querySelector('input[name="velocidade"]').value) || 400;
-            setTimeout(atualizarTabuleiro, 50);
+            const velocidade = parseInt(document.querySelector('input[name="velocidade"]').value) || 300;
+            setTimeout(atualizarTabuleiro, 100);
     }
 
     atualizarTabuleiro();
@@ -227,9 +230,11 @@
 
     function enviarFormulario(dificuldade) {
         document.getElementById('dificuldadeHidden').value = dificuldade;
-        document.getElementById('velocidadeHidden').value = document.querySelector('input[name="velocidade"]').value;
-        document.getElementById('simulacaoForm').action = '/iniciar';
-        document.getElementById('simulacaoForm').submit();
+    const valorSlider = parseInt(document.getElementById('velocidadeSlider').value);
+    const velocidadeInvertida = 700 - valorSlider;
+    document.getElementById('velocidadeHidden').value = velocidadeInvertida;
+    document.getElementById('simulacaoForm').action = '/iniciar';
+    document.getElementById('simulacaoForm').submit();
     }
 
 </script>
