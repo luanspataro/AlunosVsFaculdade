@@ -31,7 +31,7 @@ public class Simulador {
 
         while (this.contadorRodadas <= maxRodadas) {
             if (System.currentTimeMillis() - ultimaProva > intervaloProva) {
-                Tabuleiro.apareceProva();
+                Tabuleiro.apareceProva(dificuldade);
                 ultimaProva = System.currentTimeMillis();
             }
 
@@ -54,6 +54,18 @@ public class Simulador {
             for (Professor prof : professores) {
                 for (int i = 0; i < prof.getVelocidade(); i++) {
                     Agente.andaAleatorio(prof);
+                    int x = prof.x;
+                    int y = prof.y;
+                    for (int z = 0; z < Tabuleiro.agentes.size(); z++) {
+                        Movimentacao agente = Tabuleiro.agentes.get(z);
+                        if (agente.x == prof.x && agente.y == prof.y) {
+                            if (agente instanceof Prova) {
+                                Tabuleiro.agentes.remove(agente);
+                                Tabuleiro.apareceProva(3);
+                            }
+                        }
+                    }
+                    Professor professor = new Professor(x,y,velocidadeProfessor, forcaProfessor);
                 }
             }
             rodadaAtual();

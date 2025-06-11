@@ -38,6 +38,11 @@ public class Tabuleiro {
         for (Movimentacao agente : agentes) {
             mapa[agente.y][agente.x] = agente.emoji;
         }
+        for (Movimentacao agente : agentes) {
+            if (agente.emoji.equals(Agente.professor)) {
+                mapa[agente.y][agente.x] = agente.emoji;
+            }
+        }
     }
 
     public static void aguardaRodada(int tempo) {
@@ -56,10 +61,24 @@ public class Tabuleiro {
         mapa[x][y] = agente;
     }
 
-    public static void apareceProva(){
-        int [] posicao = geraPosicaoAleatoria();
-        Prova prova = new Prova(posicao[0], posicao[1]);
-        adicionaAgente(prova);
+    public static void apareceProva(int dif){
+        if (dif == 1) {
+            for (int i = 0; i < 3; i++) {
+                int [] posicao = geraPosicaoAleatoria();
+                Prova prova = new Prova(posicao[0], posicao[1]);
+                adicionaAgente(prova);
+            }
+        } else if (dif == 2) {
+            for (int i = 0; i < 2; i++) {
+                int [] posicao = geraPosicaoAleatoria();
+                Prova prova = new Prova(posicao[0], posicao[1]);
+                adicionaAgente(prova);
+            }
+        } else if (dif == 3) {
+            int [] posicao = geraPosicaoAleatoria();
+            Prova prova = new Prova(posicao[0], posicao[1]);
+            adicionaAgente(prova);
+        }
     }
 
     public static int[] geraPosicaoAleatoria(){
