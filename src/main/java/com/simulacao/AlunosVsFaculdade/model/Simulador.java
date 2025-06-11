@@ -26,12 +26,33 @@ public class Simulador {
         long ultimaProva   = System.currentTimeMillis();
         long intervaloProva = 0;
 
+        // Substitua os blocos de dificuldade por este:
         if (dificuldade == 1) {
-            int [] posicaoProfessor = Tabuleiro.geraPosicaoAleatoria();
-            Professor prof1 = new Professor(posicaoProfessor[0], posicaoProfessor[1], 2, 1);
+            int[] pos = Tabuleiro.geraPosicaoAleatoria();
+            Professor prof1 = new Professor(pos[0], pos[1], 2, 1);
             adicionarProfessor(prof1);
             Tabuleiro.adicionaAgente(prof1);
-            intervaloProva = velocidade * 2L + velocidade / 2; // 2.5x da velocidade, equivalente a 1000ms por prova na velocidade padrão
+            intervaloProva = velocidade * 2L + velocidade / 2;
+        }
+
+        if (dificuldade == 2) {
+            for (int i = 0; i < 3; i++) {
+                int[] pos = Tabuleiro.geraPosicaoAleatoria();
+                Professor prof = new Professor(pos[0], pos[1], 2, 1);
+                adicionarProfessor(prof);
+                Tabuleiro.adicionaAgente(prof);
+            }
+            intervaloProva = velocidade * 2L + velocidade / 2;
+        }
+
+        if (dificuldade == 3) {
+            for (int i = 0; i < 4; i++) {
+                int[] pos = Tabuleiro.geraPosicaoAleatoria();
+                Professor prof = new Professor(pos[0], pos[1], 2, 1);
+                adicionarProfessor(prof);
+                Tabuleiro.adicionaAgente(prof);
+            }
+            intervaloProva = velocidade * 2L + velocidade / 2;
         }
 
         while (this.contadorRodadas < maxRodadas && !interrompido) {
