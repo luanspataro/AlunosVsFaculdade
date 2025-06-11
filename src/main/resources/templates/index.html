@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <title>Simulação</title>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
             background-color: #f4f4f9;
             color: #333;
+            padding-top: 40px;
         }
-
         h2 {
             margin-top: 10px;
             margin-bottom: 15px;
@@ -109,6 +116,8 @@
         .resultado {
             width: 100%;
             margin-top: 20px;
+            height: 200px; /* altura fixa */
+
         }
 
         .configuracaoSimulacao {
@@ -173,6 +182,7 @@
         <div id="tabuleiro">Carregando...</div>
 
         <div class="resultado">
+            <h2>Rodada Atual: <span id="rodadaAtual">0</span></h2>
             <h2 class="titulo">Resultado</h2>
             <div id="resultadoTexto">Aguardando simulação...</div>
         </div>
@@ -199,6 +209,7 @@
                 tabuleiro.innerHTML = "";
                 tabuleiro.appendChild(table);
             });
+            mostraRodada();
             mostraResultado();
 
             const velocidade = parseInt(document.querySelector('input[name="velocidade"]').value) || 300;
@@ -227,6 +238,15 @@
             console.error("Erro ao buscar resultado:", error);
         });
 }
+
+    function mostraRodada() {
+        fetch('/rodada_atual')
+          .then(res => res.text())
+          .then(num => {
+            document.getElementById('rodadaAtual').textContent = num;
+          })
+          .catch(err => console.error('Erro ao buscar rodada:', err));
+      }
 
     function enviarFormulario(dificuldade) {
         document.getElementById('dificuldadeHidden').value = dificuldade;

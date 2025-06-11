@@ -54,4 +54,12 @@ public class SimuladorService {
         }
         return simulador.mostrarQuantidadeAlunosReprovados();
     }
+
+    public int getRodadaAtual() {
+        if (simulador == null) {
+            return 0;
+        }
+
+        return simulador.rodadaAtual();
+    }
 }
