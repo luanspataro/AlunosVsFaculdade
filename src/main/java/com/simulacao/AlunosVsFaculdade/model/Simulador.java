@@ -104,6 +104,15 @@ public class Simulador {
         }
     }
 
+    public void adicionarAlunosAleatorios(int quantidade, int inteligencia) {
+        for (int i = 1; i <= quantidade; i++) {
+            int[] posicao = Tabuleiro.geraPosicaoAleatoria();
+            Aluno aluno = new Aluno("Aluno" + i, posicao[0], posicao[1], inteligencia);
+            adicionarAluno(aluno);
+            Tabuleiro.adicionaAgente(aluno);
+        }
+    }
+
     public String mostrarQuantidadeAlunosReprovados() {
         if (alunos == null) {
             return "Escolha a dificuldade para começar.";
@@ -142,8 +151,13 @@ public class Simulador {
             return resultado;
         }
 
+        List<Aluno> alunosOrdenados = new ArrayList<>(alunos);
+
+        alunosOrdenados.sort((a1, a2) -> a1.getNome().compareToIgnoreCase(a2.getNome()));
+
+
         List<String> resultado = new ArrayList<>();
-        for (Aluno aluno : alunos) {
+        for (Aluno aluno : alunosOrdenados) {
             String status = "";
 
             if (aluno.estaAprovado()) {
