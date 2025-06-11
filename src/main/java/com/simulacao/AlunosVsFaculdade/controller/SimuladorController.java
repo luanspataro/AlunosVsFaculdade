@@ -43,4 +43,10 @@ public class SimuladorController {
         return  simuladorService.getPosResultado();
     }
 
+    @ResponseBody
+    @GetMapping("/rodada_atual")
+    public int getRodadaAtual() {
+        return  simuladorService.getRodadaAtual();
+    }
+
 }
