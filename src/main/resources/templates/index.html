@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulação</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            background-color: #f4f4f9;
+            color: #333;
+            padding-top: 40px;
+        }
+        h2 {
+            margin-top: 10px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: inline-block;
+            min-width: 250px;
+            margin-bottom: 0;
+        }
+
+        label {
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .btn-group {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .btn-group button {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            margin: 0 5px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-group button:hover {
+            background-color: #2980b9;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 0;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: center;
+            width: 35px;
+            height: 35px;
+            font-size: 20px;
+        }
+
+        #tabuleiro {
+            margin-top: 0;
+        }
+
+        .bloco {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .atributos {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabuleiro {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .dificuldade {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .resultado {
+            width: 100%;
+            margin-top: 20px;
+            height: 200px; /* altura fixa */
+
+        }
+
+        .configuracaoSimulacao {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .titulo {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bloco">
+    <div class="atributos">
+        <h2 class="configuracaoSimulacao">Configuração da Simulação</h2>
+        <form id="simulacaoForm" method="post">
+
+            <label>
+                População Alunos:
+                <input type="number" name="quantidadeAlunos" value="1" min="1" max="10" required>
+            </label>
+            <br><br>
+
+            <label>
+                Inteligência:
+                <input type="number" name="inteligencia" value="1" min="1" max="10" required>
+            </label>
+            <br><br>
+            <label>
+                Força:
+                <input type="number" name="forca" value="1" min="1" max="10" required>
+            </label>
+            <br><br>
+            <label>
+                Velocidade:
+                <input type="range" id="velocidadeSlider" min="100" max="500" step="100" required
+                       oninput="document.getElementById('velocidadeValor').textContent = this.value">
+                <span id="velocidadeValor"></span>
+            </label>
+            <input type="hidden" name="velocidade" id="velocidadeHidden">
+
+            <br><br>
+
+            <div class="bloco" style="margin-top: 20px;">
+                <div class="atributos">
+                    <h2 style="margin-top: 0; margin-bottom: 15px;">Iniciar Simulação</h2>
+                    <input type="hidden" name="dificuldade" id="dificuldadeHidden">
+                    <div class="dificuldade">
+
+                        <label style="margin-right: 10px;">Dificuldade:</label>
+                        <div class="btn-group">
+                            <button type="button" onclick="enviarFormulario(1)">Fácil</button>
+                            <button type="button" onclick="enviarFormulario(2)">Médio</button>
+                            <button type="button" onclick="enviarFormulario(3)">Difícil</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="tabuleiro">
+        <h2 class="titulo">Tabuleiro</h2>
+        <div id="tabuleiro">Carregando...</div>
+
+        <div class="resultado">
+            <h2>Rodada Atual: <span id="rodadaAtual">0</span></h2>
+            <h2 class="titulo">Resultado</h2>
+            <div id="resultadoTexto">Aguardando simulação...</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function atualizarTabuleiro() {
+        fetch('/mapa')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.createElement("table");
+                data.forEach(linha => {
+                    const tr = document.createElement("tr");
+                    linha.forEach(celula => {
+                        const td = document.createElement("td");
+                        td.textContent = celula || "";
+                        tr.appendChild(td);
+                    });
+                    table.appendChild(tr);
+                });
+                const tabuleiro = document.getElementById("tabuleiro");
+                tabuleiro.innerHTML = "";
+                tabuleiro.appendChild(table);
+            });
+            mostraRodada();
+            mostraResultado();
+
+            const velocidade = parseInt(document.querySelector('input[name="velocidade"]').value) || 300;
+            setTimeout(atualizarTabuleiro, 100);
+    }
+
+    atualizarTabuleiro();
+
+    function mostraResultado() {
+    fetch('/resultado')
+        .then(response => response.text())
+        .then(resultado1 => {
+            fetch('/posresultado')
+                .then(response => response.text())
+                .then(resultado2 => {
+                    const combinado = resultado1 + "<br><br>" + resultado2;
+                    document.getElementById("resultadoTexto").innerHTML = combinado;
+                })
+                .catch(error => {
+                    document.getElementById("resultadoTexto").innerHTML = resultado1 + "<br><br>Erro ao buscar pós-resultado.";
+                    console.error("Erro ao buscar pós-resultado:", error);
+                });
+        })
+        .catch(error => {
+            document.getElementById("resultadoTexto").textContent = "Erro ao buscar resultado.";
+            console.error("Erro ao buscar resultado:", error);
+        });
+}
+
+    function mostraRodada() {
+        fetch('/rodada_atual')
+          .then(res => res.text())
+          .then(num => {
+            document.getElementById('rodadaAtual').textContent = num;
+          })
+          .catch(err => console.error('Erro ao buscar rodada:', err));
+      }
+
+    function enviarFormulario(dificuldade) {
+        document.getElementById('dificuldadeHidden').value = dificuldade;
+    const valorSlider = parseInt(document.getElementById('velocidadeSlider').value);
+    const velocidadeInvertida = 700 - valorSlider;
+    document.getElementById('velocidadeHidden').value = velocidadeInvertida;
+    document.getElementById('simulacaoForm').action = '/iniciar';
+    document.getElementById('simulacaoForm').submit();
+    }
+
+</script>
+
+</body>
+</html>
