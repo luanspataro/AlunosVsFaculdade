@@ -17,13 +17,9 @@ A simulação baseada em agentes será uma interação entre alunos e professore
    git clone https://github.com/luanspataro/AlunosVsFaculdade.git
    cd AlunosVsFaculdade
    ```
-
-2. **Faça o pull da branch develop:**
-   ```bash
-   git pull origin develop
-   ```
-3. **Abra a aplicação AlunosVsFaculdadeApplication e clique em run.**
+   
+2. **Abra a IDE e selecione a aplicação AlunosVsFaculdadeApplication, após isso clique em run.**
 
 4. **Abra o navegador, entre em http://localhost:8080 e aproveite a simulação!**
 
-<img width="1325" alt="Screenshot 2025-06-11 at 19 54 21" src="https://github.com/user-attachments/assets/48b379dd-8257-40fc-8918-3c46f992ba33" />
+![image](https://github.com/user-attachments/assets/8c8d32d6-e7c5-4226-abd2-74401a3392e6)
