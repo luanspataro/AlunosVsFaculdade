@@ -19,8 +19,9 @@ public class SimuladorController {
     }
 
     @PostMapping("/iniciar")
-    public String iniciarSimulacao(@RequestParam int inteligencia, @RequestParam int dificuldade, @RequestParam int velocidade) {
-        simuladorService.iniciarSimulacao(inteligencia, dificuldade, velocidade);
+    public String iniciarSimulacao(@RequestParam int inteligencia, @RequestParam int dificuldade,
+                                   @RequestParam int velocidade, @RequestParam int quantidadeAlunos) {
+        simuladorService.iniciarSimulacao(inteligencia, dificuldade, velocidade, quantidadeAlunos);
         return "redirect:/";
     }
 
@@ -41,6 +42,12 @@ public class SimuladorController {
     @GetMapping("/posresultado")
     public String getPosResultados() {
         return  simuladorService.getPosResultado();
+    }
+
+    @ResponseBody
+    @GetMapping("/rodada_atual")
+    public int getRodadaAtual() {
+        return  simuladorService.getRodadaAtual();
     }
 
 }

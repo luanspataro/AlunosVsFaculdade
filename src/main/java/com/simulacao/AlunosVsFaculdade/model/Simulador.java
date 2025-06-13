@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Simulador {
-    private int contadorRodadas = 1;
-    private int quantidadeTotalDeRodadas = 0;
+    private int contadorRodadas = 0;
     private int maxRodadas = 100;
     private Set<Professor> professores;
     private Set<Aluno> alunos;
@@ -27,21 +26,41 @@ public class Simulador {
         long ultimaProva   = System.currentTimeMillis();
         long intervaloProva = 0;
 
+        // Substitua os blocos de dificuldade por este:
         if (dificuldade == 1) {
-            int [] posicaoProfessor = Tabuleiro.geraPosicaoAleatoria();
-            Professor prof1 = new Professor(posicaoProfessor[0], posicaoProfessor[1], 2, 1);
+            int[] pos = Tabuleiro.geraPosicaoAleatoria();
+            Professor prof1 = new Professor(pos[0], pos[1], 2, 1);
             adicionarProfessor(prof1);
             Tabuleiro.adicionaAgente(prof1);
-            intervaloProva = velocidade * 2L + velocidade / 2; // 2.5x da velocidade, equivalente a 1000ms por prova na velocidade padrão
+            intervaloProva = velocidade * 2L + velocidade / 2;
         }
 
-        while (this.contadorRodadas <= maxRodadas && !interrompido) {
+        if (dificuldade == 2) {
+            for (int i = 0; i < 3; i++) {
+                int[] pos = Tabuleiro.geraPosicaoAleatoria();
+                Professor prof = new Professor(pos[0], pos[1], 2, 1);
+                adicionarProfessor(prof);
+                Tabuleiro.adicionaAgente(prof);
+            }
+            intervaloProva = velocidade * 2L + velocidade / 2;
+        }
+
+        if (dificuldade == 3) {
+            for (int i = 0; i < 4; i++) {
+                int[] pos = Tabuleiro.geraPosicaoAleatoria();
+                Professor prof = new Professor(pos[0], pos[1], 2, 1);
+                adicionarProfessor(prof);
+                Tabuleiro.adicionaAgente(prof);
+            }
+            intervaloProva = velocidade * 2L + velocidade / 2;
+        }
+
+        while (this.contadorRodadas < maxRodadas && !interrompido) {
             if (System.currentTimeMillis() - ultimaProva > intervaloProva) {
                 Tabuleiro.apareceProva();
                 ultimaProva = System.currentTimeMillis();
             }
 
-            Tabuleiro.mostraTabuleiro();
             Tabuleiro.aguardaRodada(velocidade);
 
             for (Aluno aluno : alunos) {
@@ -59,29 +78,31 @@ public class Simulador {
             for (Professor prof : professores) {
                 Agente.andaAleatorio(prof);
             }
-            rodadaAtual();
+
+            Tabuleiro.mostraTabuleiro();
+            contadorRodadas++;
+            boolean todosAlunos = alunos.stream()
+                    .allMatch(a -> a.estaAprovado() || a.estaReprovado());
+            if (todosAlunos) {
+                System.out.println("Todos os alunos já foram avaliados na rodada " + contadorRodadas + ". Encerrando simulação.");
+                break;
+            }
         }
-
         avaliarAlunos();
-
-        mostrarQuantidadeAlunosAprovados();
-        mostrarQuantidadeAlunosReprovados();
-        mostrarRelatorioAlunos();
     }
 
-    private void avaliarAlunos() {
+
+    public int rodadaAtual() {
+        return contadorRodadas;
+    }
+
+    public void avaliarAlunos() {
         for (Aluno aluno : alunos) {
             if (!aluno.estaAprovado() && !aluno.estaReprovado()) {
                 aluno.setReprovado(true);
                 aluno.setMotivoReprovacao("nota_insuficiente");
             }
         }
-    }
-
-    public void rodadaAtual() {
-        System.out.println("Rodada atual: " + contadorRodadas);
-        contadorRodadas++;
-        quantidadeTotalDeRodadas++;
     }
 
     public Set<Aluno> getAlunos() {
@@ -101,6 +122,15 @@ public class Simulador {
     public void adicionarAluno(Aluno aluno) {
         if (aluno != null) {
             alunos.add(aluno);
+        }
+    }
+
+    public void adicionarAlunosAleatorios(int quantidade, int inteligencia) {
+        for (int i = 1; i <= quantidade; i++) {
+            int[] posicao = Tabuleiro.geraPosicaoAleatoria();
+            Aluno aluno = new Aluno("Aluno" + i, posicao[0], posicao[1], inteligencia);
+            adicionarAluno(aluno);
+            Tabuleiro.adicionaAgente(aluno);
         }
     }
 
@@ -142,8 +172,13 @@ public class Simulador {
             return resultado;
         }
 
+        List<Aluno> alunosOrdenados = new ArrayList<>(alunos);
+
+        alunosOrdenados.sort((a1, a2) -> a1.getNome().compareToIgnoreCase(a2.getNome()));
+
+
         List<String> resultado = new ArrayList<>();
-        for (Aluno aluno : alunos) {
+        for (Aluno aluno : alunosOrdenados) {
             String status = "";
 
             if (aluno.estaAprovado()) {
@@ -159,7 +194,7 @@ public class Simulador {
 
             resultado.add(aluno.getNome() + " na posição (" + aluno.x + "," + aluno.y + ") tem "
                     + aluno.getNotas() + " pontos no total. Perdeu "
-                    + aluno.getNotasPerdidas() + " pontos com os professores. " + status);
+                    + aluno.getNotasPerdidas() + " pontos com os professores.\n" + status);
         }
 
         return resultado;
